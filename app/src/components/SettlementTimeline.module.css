@@ -1,0 +1,218 @@
+/* SettlementTimeline.module.css */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+
+.progressBar {
+  height: 3px;
+  background: var(--color-surface-2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #97C459, #5DCAA5);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* ── Legend ───────────────────────────────────────────────────────────────── */
+
+.legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--color-text-3);
+}
+
+.legendDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Timeline ─────────────────────────────────────────────────────────────── */
+
+.timeline {
+  position: relative;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.line {
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--color-border);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  min-height: 48px;
+}
+
+/* ── Step dot ─────────────────────────────────────────────────────────────── */
+
+.dot {
+  position: absolute;
+  left: -26px;
+  top: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border-strong);
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s;
+  z-index: 1;
+}
+
+.done {
+  /* color set inline */
+}
+
+.active {
+  background: transparent;
+}
+
+.activePulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  opacity: 0.4;
+  animation: ripple 1.2s ease-out infinite;
+}
+
+@keyframes ripple {
+  0%   { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.waiting {
+  opacity: 0.4;
+}
+
+/* ── Content ──────────────────────────────────────────────────────────────── */
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.stepLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  transition: color 0.3s;
+}
+
+.layerTag {
+  font-size: 10px;
+  font-family: "Space Mono", monospace;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid;
+  letter-spacing: 0.05em;
+}
+
+.elapsed {
+  font-size: 11px;
+  font-family: "Space Mono", monospace;
+  color: #5DCAA5;
+  margin-left: auto;
+}
+
+.activeBadge {
+  font-size: 10px;
+  font-family: "Space Mono", monospace;
+  color: var(--color-warning);
+  margin-left: auto;
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.sub {
+  font-size: 11px;
+  color: var(--color-text-3);
+  font-family: "Space Mono", monospace;
+  line-height: 1.5;
+}
+
+/* ── On-chain panel ───────────────────────────────────────────────────────── */
+
+.onChainPanel {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.onChainTitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-3);
+  font-family: "Space Mono", monospace;
+  margin-bottom: 10px;
+}
+
+.onChainRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 12px;
+}
+
+.onChainRow:last-child { border-bottom: none; }
+
+.onChainLabel { color: var(--color-text-2); }
+
+.onChainVal {
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+  color: var(--color-accent-2);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+a.onChainVal:hover { opacity: 0.75; text-decoration: underline; }

@@ -1,0 +1,9 @@
+# env files — JANGAN dicommit
+.env
+.env.local
+.env.production
+app/.env.local
+oracle/.env
+
+# tapi .env.example boleh dicommit (tidak ada secret)
+!.env.example

@@ -1,0 +1,162 @@
+/* SettlementReceipt.module.css */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+/* ── Banner ───────────────────────────────────────────────────────────────── */
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(97, 196, 89, 0.07);
+  border: 1px solid rgba(97, 196, 89, 0.2);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.bannerIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(97, 196, 89, 0.15);
+  border: 1.5px solid rgba(97, 196, 89, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.bannerText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+}
+
+.bannerText strong {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.bannerText span {
+  color: var(--color-text-2);
+  line-height: 1.5;
+}
+
+.idrAmt {
+  color: var(--color-accent);
+  font-weight: 600;
+  font-family: "Space Mono", monospace;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1rem 1.125rem;
+}
+
+.cardTitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-2);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* ── Receipt rows ─────────────────────────────────────────────────────────── */
+
+.rows { display: flex; flex-direction: column; }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 12px;
+  gap: 8px;
+}
+
+.row:last-child { border-bottom: none; }
+
+.rowLabel { color: var(--color-text-2); white-space: nowrap; flex-shrink: 0; }
+
+.rowVal {
+  color: var(--color-text);
+  text-align: right;
+  word-break: break-all;
+}
+
+.mono { font-family: "Space Mono", monospace; font-size: 11px; }
+.green { color: var(--color-accent) !important; font-weight: 500; }
+
+.link {
+  color: var(--color-accent-2) !important;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.link:hover { opacity: 0.75; text-decoration: underline; }
+
+/* ── Regulatory grid ──────────────────────────────────────────────────────── */
+
+.regGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.regItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-2);
+  line-height: 1.5;
+}
+
+.regCheck {
+  color: var(--color-accent);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.regItem strong { color: var(--color-text); }
+
+/* ── New grant button ─────────────────────────────────────────────────────── */
+
+.newBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: "DM Sans", sans-serif;
+}
+
+.newBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

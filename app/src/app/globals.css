@@ -1,0 +1,83 @@
+/* globals.css */
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap");
+
+:root {
+  /* Green palette */
+  --green-50:  #EAF3DE;
+  --green-100: #C0DD97;
+  --green-200: #97C459;
+  --green-400: #639922;
+  --green-600: #3B6D11;
+  --green-800: #27500A;
+  --green-900: #17340A;
+
+  /* Teal palette */
+  --teal-200: #5DCAA5;
+  --teal-400: #1D9E75;
+  --teal-600: #0F6E56;
+
+  /* Neutrals */
+  --gray-50:  #F8FAF7;
+  --gray-100: #EEF2EA;
+  --gray-200: #D4D9CC;
+  --gray-400: #8A9082;
+  --gray-600: #4E5448;
+  --gray-700: #3A3F34;
+  --gray-800: #2A2E26;
+  --gray-900: #1A1E16;
+
+  /* Semantic */
+  --color-bg:        #1a1e16;
+  --color-surface:   #212619;
+  --color-surface-2: #272d1f;
+  --color-border:    rgba(150, 200, 130, 0.12);
+  --color-border-strong: rgba(150, 200, 130, 0.25);
+  --color-text:      #dde8d5;
+  --color-text-2:    #8fa882;
+  --color-text-3:    #5c6e55;
+  --color-accent:    #97C459;
+  --color-accent-2:  #5DCAA5;
+  --color-warning:   #d4a017;
+  --color-error:     #e05a5a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "DM Sans", system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100dvh;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Wallet adapter UI overrides */
+.wallet-adapter-button {
+  font-family: "DM Sans", sans-serif !important;
+  background: var(--color-surface-2) !important;
+  border: 1px solid var(--color-border-strong) !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  height: 36px !important;
+  padding: 0 14px !important;
+  color: var(--color-text) !important;
+  transition: all 0.15s !important;
+}
+.wallet-adapter-button:hover:not(:disabled) {
+  background: var(--color-surface) !important;
+  border-color: var(--color-accent) !important;
+}
+.wallet-adapter-modal-wrapper {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+/* Utility classes */
+.mono { font-family: "Space Mono", monospace; }
+.text-accent { color: var(--color-accent); }
+.text-2 { color: var(--color-text-2); }
+.text-3 { color: var(--color-text-3); }
