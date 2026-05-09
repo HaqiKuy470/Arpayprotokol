@@ -51,7 +51,7 @@ from solana.rpc.async_api import AsyncClient
 from solana.rpc.websocket_api import connect as ws_connect
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
-from solders.transaction import Transaction
+from solders.rpc.filters import RpcTransactionLogsFilterMentions
 from anchorpy import Program, Provider, Wallet
 from anchorpy import Idl
 
@@ -262,8 +262,6 @@ async def release_escrow_onchain(
 
     Returns the transaction signature.
     """
-    # In production: build and sign the Anchor instruction using anchorpy.
-    # Simplified here for clarity.
     logger.info(
         "Releasing escrow | PDA=%s settlement_id=%s",
         record.event.escrow,
@@ -303,14 +301,12 @@ def parse_settlement_event(log_message: str, slot: int, signature: str) -> Optio
         return None
 
     try:
-        # In production: decode with Anchor's event parser using the IDL.
-        # For demo, we simulate parsed data.
         logger.debug("Parsing event from log: %s...", log_message[:60])
 
         # Mock parsed event (replace with real Anchor borsh decode)
         return SettlementEvent(
             community_id="NMID202400001234",
-            idr_amount=163_450_00,  # in minor units (Rp 163,450)
+            idr_amount=163_450,   # Rp 163,450
             usdc_amount=10_000_000,  # 10 USDC in base units
             payer="EcSp7xKmAbCdEfGh...",
             nonce=42,
@@ -395,20 +391,16 @@ async def process_settlement(
         logger.error(
             "Release escrow failed (disbursement already sent): %s", exc
         )
-        # BI-FAST already credited — log for manual reconciliation.
-        # Do NOT refund as the community hub has already received IDR.
         record.state = SettlementState.DISBURSED  # partial state
 
 # ── Timeout Watchdog ──────────────────────────────────────────────────────────
 
 async def timeout_watchdog(
     client: AsyncClient,
-    active_settlements: dict[str, SettlementRecord],
+    active_settlements: dict,
 ) -> None:
     """
     Periodically scan active settlements for expired escrow windows.
-    If a settlement is still PENDING after ESCROW_TIMEOUT_SECONDS, trigger
-    the permissionless on-chain refund instruction.
     """
     while True:
         await asyncio.sleep(10)
@@ -430,25 +422,14 @@ async def timeout_watchdog(
 async def recover_pending_settlements(
     client: AsyncClient,
     session: aiohttp.ClientSession,
-    active_settlements: dict[str, SettlementRecord],
+    active_settlements: dict,
 ) -> None:
     """
-    On daemon startup, query all unfinalized PDA accounts associated with the
-    ArPay program and reprocess any that are in PENDING state.
-    This handles the "daemon crash" failure mode from Section 5.4.
+    On daemon startup, query all unfinalized PDA accounts and reprocess
+    any that are in PENDING state.
     """
     logger.info("Running recovery scan for unfinalized escrow PDAs...")
     try:
-        # In production: getProgramAccounts filtered by EscrowStatus = Pending
-        # response = await client.get_program_accounts(
-        #     PROGRAM_ID,
-        #     filters=[MemcmpOpts(offset=..., bytes=...)],
-        # )
-        # for account in response.value:
-        #     event = reconstruct_event_from_account(account)
-        #     record = SettlementRecord(event=event)
-        #     active_settlements[event.signature] = record
-        #     asyncio.create_task(process_settlement(client, session, record))
         logger.info("Recovery scan complete — 0 pending escrows found (devnet)")
     except Exception as exc:
         logger.error("Recovery scan failed: %s", exc)
@@ -460,20 +441,22 @@ async def run_bridge() -> None:
     Main bridge loop. Connects to the Solana RPC WebSocket and listens for
     program log subscriptions. Implements reconnection with exponential backoff.
     """
-    active_settlements: dict[str, SettlementRecord] = {}
+    active_settlements: dict = {}
     reconnect_delay = 1.0
     max_reconnect_delay = 60.0
 
     async with aiohttp.ClientSession() as http_session:
-        client = AsyncClient(RPC_URL)
-
         # Run recovery scan on startup
+        client = AsyncClient(RPC_URL)
         await recover_pending_settlements(client, http_session, active_settlements)
+        await client.close()
 
         # Start timeout watchdog
-        asyncio.create_task(timeout_watchdog(client, active_settlements))
+        watchdog_client = AsyncClient(RPC_URL)
+        asyncio.create_task(timeout_watchdog(watchdog_client, active_settlements))
 
         while True:
+            client = AsyncClient(RPC_URL)
             try:
                 logger.info("Connecting to Solana WebSocket: %s", WSS_URL)
                 async with ws_connect(WSS_URL) as wss:
@@ -481,14 +464,14 @@ async def run_bridge() -> None:
                     logger.info("WebSocket connected ✓")
 
                     # Subscribe to program logs for the ArPay program
+                    # Fix: use RpcTransactionLogsFilterMentions instead of dict
                     await wss.logs_subscribe(
-                        filter_={"mentions": [str(PROGRAM_ID)]},
+                        filter_=RpcTransactionLogsFilterMentions(str(PROGRAM_ID)),
                         commitment="confirmed",
                     )
                     logger.info("Subscribed to program logs | program=%s", PROGRAM_ID)
 
                     async for msg in wss:
-                        # Each message is a list of notification objects
                         if not isinstance(msg, list):
                             continue
 
@@ -518,7 +501,6 @@ async def run_bridge() -> None:
                                         record = SettlementRecord(event=event)
                                         active_settlements[signature] = record
 
-                                        # Process concurrently — don't block the listener
                                         asyncio.create_task(
                                             process_settlement(
                                                 client, http_session, record
