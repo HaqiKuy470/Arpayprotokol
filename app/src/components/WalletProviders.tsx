@@ -27,7 +27,7 @@ export function WalletProviders({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    // @ts-expect-error — wallet-adapter types lag behind React 18 ReactNode
+    // @ts-ignore — wallet-adapter types may lag behind React 18 ReactNode
     <ConnectionProvider endpoint={RPC_ENDPOINT}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>{children}</WalletModalProvider>
