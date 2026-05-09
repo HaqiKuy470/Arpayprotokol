@@ -38,7 +38,10 @@ export default function Home() {
   const onQRScan = useCallback(
     async (raw: string) => {
       await handleQRScan(raw);
-      setStep(1);
+      // Only advance to review if rate was fetched successfully
+      if (useArPayStore.getState().rateQuote) {
+        setStep(1);
+      }
     },
     [handleQRScan]
   );

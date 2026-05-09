@@ -117,16 +117,28 @@ export async function fetchRateQuote(
   const idrData = await idrRes.json();
   const idrUsdRate: number = idrData.rate; // e.g. 16345.5
 
-  // In production, fetch from Pyth's EVM/SVM price service.
-  // For devnet demo we use the REST endpoint.
-  const pythRes = await fetch(
-    "https://hermes.pyth.network/api/latest_price_feeds?" +
-    "ids[]=0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a"
-  );
-  const pythData = await pythRes.json();
-  const feed = pythData[0];
-  const usdcUsdPrice = Number(feed.price.price) * 10 ** feed.price.expo;
-  const pythConfidence = Number(feed.price.conf) * 10 ** feed.price.expo;
+  // Fetch USDC/USD price from Pyth Hermes REST API.
+  // Fallback to 1.0001 (USDC ≈ $1) if Pyth is unreachable.
+  let usdcUsdPrice = 1.0001;
+  let pythConfidence = 0.0001;
+  try {
+    const pythRes = await fetch(
+      "https://hermes.pyth.network/v2/updates/price/latest?" +
+      "ids[]=0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+      { signal: AbortSignal.timeout(4000) }
+    );
+    if (pythRes.ok) {
+      const pythData = await pythRes.json();
+      const parsed = pythData?.parsed?.[0];
+      if (parsed?.price) {
+        usdcUsdPrice = Number(parsed.price.price) * 10 ** parsed.price.expo;
+        pythConfidence = Number(parsed.price.conf) * 10 ** parsed.price.expo;
+      }
+    }
+  } catch {
+    // Pyth unreachable — use fallback, still show review screen
+    console.warn("Pyth fetch failed, using fallback USDC price");
+  }
 
   const usdcIdrRate = Math.round(usdcUsdPrice * idrUsdRate);
 
