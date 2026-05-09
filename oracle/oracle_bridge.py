@@ -49,6 +49,7 @@ import aiohttp
 import base58
 from solana.rpc.async_api import AsyncClient
 from solana.rpc.websocket_api import connect as ws_connect
+from solders.rpc.filter import RpcTransactionLogsFilter
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from anchorpy import Program, Provider, Wallet
@@ -464,7 +465,7 @@ async def run_bridge() -> None:
 
                     # Subscribe to program logs for the ArPay program
                     await wss.logs_subscribe(
-                        filter_="all",
+                        filter_=RpcTransactionLogsFilter.All,
                         commitment="confirmed",
                     )
                     logger.info("Subscribed to program logs | program=%s", PROGRAM_ID)
