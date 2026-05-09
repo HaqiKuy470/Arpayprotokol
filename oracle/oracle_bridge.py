@@ -48,7 +48,7 @@ from typing import Optional
 import aiohttp
 import base58
 from solana.rpc.async_api import AsyncClient
-from solana.rpc.websocket_api import connect as ws_connect
+import websockets
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from solders.rpc.filters import RpcTransactionLogsFilterMentions
@@ -437,21 +437,15 @@ async def recover_pending_settlements(
 # ── Main WebSocket Listener ───────────────────────────────────────────────────
 
 async def run_bridge() -> None:
-    """
-    Main bridge loop. Connects to the Solana RPC WebSocket and listens for
-    program log subscriptions. Implements reconnection with exponential backoff.
-    """
     active_settlements: dict = {}
     reconnect_delay = 1.0
     max_reconnect_delay = 60.0
 
     async with aiohttp.ClientSession() as http_session:
-        # Run recovery scan on startup
         client = AsyncClient(RPC_URL)
         await recover_pending_settlements(client, http_session, active_settlements)
         await client.close()
 
-        # Start timeout watchdog
         watchdog_client = AsyncClient(RPC_URL)
         asyncio.create_task(timeout_watchdog(watchdog_client, active_settlements))
 
@@ -459,66 +453,55 @@ async def run_bridge() -> None:
             client = AsyncClient(RPC_URL)
             try:
                 logger.info("Connecting to Solana WebSocket: %s", WSS_URL)
-                async with ws_connect(WSS_URL) as wss:
-                    reconnect_delay = 1.0  # Reset on successful connect
+                async with websockets.connect(WSS_URL) as wss:
+                    reconnect_delay = 1.0
                     logger.info("WebSocket connected ✓")
 
-                    # Subscribe to program logs for the ArPay program
-                    # Fix: use RpcTransactionLogsFilterMentions instead of dict
-                    await wss.logs_subscribe(
-                        filter_=RpcTransactionLogsFilterMentions(str(PROGRAM_ID)),
-                        commitment="confirmed",
-                    )
+                    await wss.send(json.dumps({
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "method": "logsSubscribe",
+                        "params": [
+                            {"mentions": [str(PROGRAM_ID)]},
+                            {"commitment": "confirmed"}
+                        ]
+                    }))
                     logger.info("Subscribed to program logs | program=%s", PROGRAM_ID)
 
-                    async for msg in wss:
-                        if not isinstance(msg, list):
-                            continue
+                    async for raw_msg in wss:
+                        try:
+                            msg = json.loads(raw_msg)
+                            if "result" in msg and isinstance(msg.get("result"), int):
+                                logger.info("Subscription confirmed | sub_id=%s", msg["result"])
+                                continue
 
-                        for notification in msg:
-                            try:
-                                result = notification.result
-                                slot = result.context.slot
-                                value = result.value
-                                signature = str(value.signature)
-                                logs = value.logs or []
+                            params = msg.get("params", {})
+                            result = params.get("result", {})
+                            context = result.get("context", {})
+                            value = result.get("value", {})
 
-                                # Skip failed transactions
-                                if value.err is not None:
-                                    continue
+                            slot = context.get("slot", 0)
+                            signature = value.get("signature", "")
+                            logs = value.get("logs") or []
+                            err = value.get("err")
 
-                                # Scan logs for SettlementRequested event
-                                for log_line in logs:
-                                    event = parse_settlement_event(
-                                        log_line, slot, signature
-                                    )
-                                    if event and signature not in active_settlements:
-                                        logger.info(
-                                            "SettlementRequested detected | slot=%d sig=%s...",
-                                            slot,
-                                            signature[:16],
-                                        )
-                                        record = SettlementRecord(event=event)
-                                        active_settlements[signature] = record
+                            if not signature or err is not None:
+                                continue
 
-                                        asyncio.create_task(
-                                            process_settlement(
-                                                client, http_session, record
-                                            )
-                                        )
-                                        break
+                            for log_line in logs:
+                                event = parse_settlement_event(log_line, slot, signature)
+                                if event and signature not in active_settlements:
+                                    logger.info("SettlementRequested detected | slot=%d sig=%s...", slot, signature[:16])
+                                    record = SettlementRecord(event=event)
+                                    active_settlements[signature] = record
+                                    asyncio.create_task(process_settlement(client, http_session, record))
+                                    break
 
-                            except Exception as exc:
-                                logger.error(
-                                    "Error processing notification: %s", exc
-                                )
+                        except Exception as exc:
+                            logger.error("Error processing notification: %s", exc)
 
             except Exception as exc:
-                logger.error(
-                    "WebSocket error: %s — reconnecting in %.0fs",
-                    exc,
-                    reconnect_delay,
-                )
+                logger.error("WebSocket error: %s — reconnecting in %.0fs", exc, reconnect_delay)
                 await asyncio.sleep(reconnect_delay)
                 reconnect_delay = min(reconnect_delay * 2, max_reconnect_delay)
 
