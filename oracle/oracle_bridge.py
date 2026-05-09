@@ -51,7 +51,6 @@ from solana.rpc.async_api import AsyncClient
 import websockets
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
-from solders.rpc.filters import RpcTransactionLogsFilterMentions
 from anchorpy import Program, Provider, Wallet
 from anchorpy import Idl
 
