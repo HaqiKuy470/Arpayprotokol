@@ -17,3 +17,27 @@ programs/arpay/target/
 !tsconfig.json
 !package.json
 !package-lock.json
+!package-lock.json
+
+# Node modules
+node_modules/
+app/node_modules/
+oracle/node_modules/
+
+# Next.js build output
+app/.next/
+app/out/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+oracle/__pycache__/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
