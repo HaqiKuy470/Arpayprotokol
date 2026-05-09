@@ -51,7 +51,6 @@ from solana.rpc.async_api import AsyncClient
 from solana.rpc.websocket_api import connect as ws_connect
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
-from solders.rpc.filters import RpcTransactionLogsFilterMentions
 from anchorpy import Program, Provider, Wallet
 from anchorpy import Idl
 
@@ -464,9 +463,8 @@ async def run_bridge() -> None:
                     logger.info("WebSocket connected ✓")
 
                     # Subscribe to program logs for the ArPay program
-                    # Fix: use RpcTransactionLogsFilterMentions instead of dict
                     await wss.logs_subscribe(
-                        filter_=RpcTransactionLogsFilterMentions(str(PROGRAM_ID)),
+                        filter_="all",
                         commitment="confirmed",
                     )
                     logger.info("Subscribed to program logs | program=%s", PROGRAM_ID)
@@ -485,6 +483,11 @@ async def run_bridge() -> None:
 
                                 # Skip failed transactions
                                 if value.err is not None:
+                                    continue
+
+                                # Skip jika tidak ada log dari program kita
+                                program_str = str(PROGRAM_ID)
+                                if not any(program_str in log for log in logs):
                                     continue
 
                                 # Scan logs for SettlementRequested event
