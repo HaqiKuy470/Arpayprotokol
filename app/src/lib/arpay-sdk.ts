@@ -23,22 +23,22 @@ import { BN } from "bn.js";
 // ── Constants ────────────────────────────────────────────────────────────────
 
 export const ARPAY_PROGRAM_ID = new PublicKey(
-  "ARPay1111111111111111111111111111111111111111"
+  process.env.NEXT_PUBLIC_ARPAY_PROGRAM_ID ??
+  "A4x7RZJjGPCnX5gpPiWzJJxMcaB2wnbBggfCDMN5uHHj"
 );
 
-/** USDC mint on Solana mainnet */
 export const USDC_MINT_MAINNET = new PublicKey(
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 );
 
-/** USDC mint on Solana devnet */
 export const USDC_MINT_DEVNET = new PublicKey(
+  process.env.NEXT_PUBLIC_USDC_MINT ??
   "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"
 );
 
-/** Pyth USDC/USD price feed — mainnet */
 export const PYTH_USDC_USD_FEED = new PublicKey(
-  "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"
+  process.env.NEXT_PUBLIC_PYTH_FEED_USDC_USD ??
+  "Dpw1EAVrSB1ibxiDQyTAW6Zip3J4Btk2x4SgApQCeFbX"
 );
 
 /** USDC has 6 decimal places */

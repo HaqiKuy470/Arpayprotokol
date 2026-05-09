@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { settlementQueue } from "../initiate/route";
+import { settlementQueue } from "@/lib/settlementQueue";
 
 export async function GET(req: NextRequest) {
   const sig = req.nextUrl.searchParams.get("sig");

@@ -92,7 +92,7 @@ export function useSettlement() {
       // Build the program client (in production, pass the real IDL)
       const provider = new anchor.AnchorProvider(
         connection,
-        { publicKey, signTransaction, sendTransaction } as anchor.Wallet,
+        { publicKey, signTransaction, sendTransaction } as unknown as anchor.Wallet,
         { commitment: "confirmed" }
       );
       // const program = new anchor.Program(idl as anchor.Idl, ARPAY_PROGRAM_ID, provider);

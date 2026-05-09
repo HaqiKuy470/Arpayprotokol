@@ -13,26 +13,12 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { Connection, PublicKey } from "@solana/web3.js";
+import { settlementQueue } from "@/lib/settlementQueue";
 
 const RPC_ENDPOINT =
   process.env.SOLANA_RPC_URL ?? "https://api.devnet.solana.com";
 
-// In-memory settlement queue (replace with Redis/DB in production)
-const settlementQueue = new Map<
-  string,
-  {
-    status: string;
-    communityId: string;
-    idrAmount: number;
-    usdcAmount: number;
-    nonce: number;
-    escrowPDA: string;
-    sponsorPubkey: string;
-    bifastRef?: string;
-    createdAt: number;
-    processedAt?: number;
-  }
->();
+
 
 // Simulate bridge processing in background (production: Python daemon does this)
 function simulateBridgeProcessing(sig: string, idrAmount: number) {
@@ -112,5 +98,3 @@ export async function POST(req: NextRequest) {
   });
 }
 
-// Export queue for status endpoint (in production: Redis/DB shared store)
-export { settlementQueue };
