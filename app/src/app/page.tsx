@@ -22,7 +22,7 @@ import styles from "./page.module.css";
 
 type Step = 0 | 1 | 2 | 3;
 
-const STEP_LABELS = ["Scan QRIS", "Review Grant", "Settlement", "Konfirmasi"];
+const STEP_LABELS = ["Scan QRIS", "Review Grant", "Settlement", "Confirmation"];
 
 export default function Home() {
   const [step, setStep] = useState<Step>(0);
@@ -103,7 +103,7 @@ export default function Home() {
             <section>
               <h1 className={styles.panelTitle}>Scan QRIS Community Hub</h1>
               <p className={styles.panelSub}>
-                Scan kode QRIS dari recycling cooperative, composting hub, atau DePIN node operator.
+                Scan the QRIS code from a recycling cooperative, composting hub, or DePIN node operator.
               </p>
               <QRScanner onScan={onQRScan} active={step === 0} />
             </section>
@@ -113,7 +113,7 @@ export default function Home() {
             <section>
               <h1 className={styles.panelTitle}>Review Eco-Incentive Grant</h1>
               <p className={styles.panelSub}>
-                Verifikasi detail community hub dan nilai grant sebelum menandatangani transaksi.
+                Verify the community hub details and grant amount before signing the transaction.
               </p>
               <GrantReview
                 onSubmit={onSubmitGrant}
@@ -125,7 +125,7 @@ export default function Home() {
 
           {step === 2 && (
             <section>
-              <h1 className={styles.panelTitle}>Settlement Berlangsung</h1>
+              <h1 className={styles.panelTitle}>Settlement In Progress</h1>
               <p className={styles.panelSub}>
                 Tri-layer execution: Solana → Oracle Bridge → Xendit → BI-FAST
               </p>
@@ -153,7 +153,7 @@ export default function Home() {
 
           {step === 3 && (
             <section>
-              <h1 className={styles.panelTitle}>Grant Berhasil ✓</h1>
+              <h1 className={styles.panelTitle}>Grant Successful ✓</h1>
               <SettlementReceipt onNewGrant={onNewGrant} />
             </section>
           )}

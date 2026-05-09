@@ -200,14 +200,14 @@ export function useSettlement() {
             });
 
             toast.success(
-              `Rp ${store.idrAmount.toLocaleString("id-ID")} dikirim via BI-FAST ✓`
+              `Rp ${store.idrAmount.toLocaleString("id-ID")} sent via BI-FAST ✓`
             );
             return;
           }
 
           if (data.status === "refunded") {
             store.setStatus("refunded");
-            toast("USDC dikembalikan ke wallet sponsor", { icon: "↩" });
+            toast("USDC refunded to sponsor wallet", { icon: "↩" });
             return;
           }
 

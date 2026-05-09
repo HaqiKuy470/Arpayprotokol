@@ -27,13 +27,13 @@ export function SettlementReceipt({ onNewGrant }: SettlementReceiptProps) {
       <div className={styles.banner}>
         <div className={styles.bannerIcon}>✓</div>
         <div className={styles.bannerText}>
-          <strong>Grant berhasil disalurkan</strong>
+          <strong>Grant successfully disbursed</strong>
           <span>
-            {latest.hubName} menerima{" "}
+            {latest.hubName} received{" "}
             <span className={styles.idrAmt}>
               Rp {latest.idrAmount.toLocaleString("id-ID")}
             </span>{" "}
-            via BI-FAST dalam {elapsedSec}s
+            via BI-FAST in {elapsedSec}s
           </span>
         </div>
       </div>
@@ -84,12 +84,12 @@ export function SettlementReceipt({ onNewGrant }: SettlementReceiptProps) {
       {/* Regulatory status */}
       <section className={styles.card}>
         <h2 className={styles.cardTitle}>
-          <ShieldIcon /> Status Regulasi OJK/BI
+          <ShieldIcon /> OJK/BI Regulatory Status
         </h2>
         <div className={styles.regGrid}>
           <div className={styles.regItem}>
             <span className={styles.regCheck}>✓</span>
-            <span>Community hub <strong>bukan VASP</strong> — zero on-chain presence</span>
+            <span>Community hub is <strong>not a VASP</strong> — zero on-chain presence</span>
           </div>
           <div className={styles.regItem}>
             <span className={styles.regCheck}>✓</span>
@@ -97,18 +97,18 @@ export function SettlementReceipt({ onNewGrant }: SettlementReceiptProps) {
           </div>
           <div className={styles.regItem}>
             <span className={styles.regCheck}>✓</span>
-            <span>Eco-sponsor menggunakan self-custody wallet — bukan kustodian</span>
+            <span>Eco-sponsor uses self-custody wallet — not a custodian</span>
           </div>
           <div className={styles.regItem}>
             <span className={styles.regCheck}>✓</span>
-            <span>ArPay operator beroperasi di bawah KYB Xendit standar</span>
+            <span>ArPay operator operates under standard Xendit KYB</span>
           </div>
         </div>
       </section>
 
       {/* Actions */}
       <button className={styles.newBtn} onClick={onNewGrant}>
-        <PlusIcon /> Kirim Grant Baru
+        <PlusIcon /> Send New Grant
       </button>
     </div>
   );

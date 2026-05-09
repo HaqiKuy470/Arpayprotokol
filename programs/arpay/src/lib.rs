@@ -69,10 +69,12 @@ pub mod arpay {
         token::transfer(cpi_ctx, usdc_amount)?;
 
         // ── 3. Write escrow state ─────────────────────────────────────────
-        let escrow = &mut ctx.accounts.escrow;
         let clock = Clock::get()?;
+        let escrow_key = ctx.accounts.escrow.key();
+        let sponsor_key = ctx.accounts.sponsor.key();
+        let escrow = &mut ctx.accounts.escrow;
 
-        escrow.sponsor = ctx.accounts.sponsor.key();
+        escrow.sponsor = sponsor_key;
         escrow.community_id = community_id.clone();
         escrow.usdc_amount = usdc_amount;
         escrow.idr_amount = idr_amount;
@@ -82,21 +84,23 @@ pub mod arpay {
         escrow.status = EscrowStatus::Pending;
         escrow.bump = ctx.bumps.escrow;
 
+        let community_id_log = escrow.community_id.clone();
+
         // ── 4. Emit settlement-requested event ────────────────────────────
         emit!(SettlementRequested {
             community_id,
             idr_amount,
             usdc_amount,
-            payer: ctx.accounts.sponsor.key(),
+            payer: sponsor_key,
             nonce,
             timestamp: clock.unix_timestamp,
-            escrow: ctx.accounts.escrow.key(),
+            escrow: escrow_key,
         });
 
         msg!(
             "ArPay: settlement initiated | sponsor={} community={} usdc={} idr={} nonce={}",
-            ctx.accounts.sponsor.key(),
-            escrow.community_id,
+            sponsor_key,
+            community_id_log,
             usdc_amount,
             idr_amount,
             nonce,
@@ -114,6 +118,7 @@ pub mod arpay {
         ctx: Context<ReleaseEscrow>,
         settlement_id: String,
     ) -> Result<()> {
+        let escrow_key = ctx.accounts.escrow.key();
         let escrow = &mut ctx.accounts.escrow;
 
         require!(
@@ -143,14 +148,18 @@ pub mod arpay {
         );
         token::transfer(cpi_ctx, escrow.usdc_amount)?;
 
+        let community_id_log = escrow.community_id.clone();
+        let usdc_log = escrow.usdc_amount;
+        let idr_log = escrow.idr_amount;
+
         escrow.status = EscrowStatus::Released;
 
         emit!(EscrowReleased {
-            escrow: ctx.accounts.escrow.key(),
+            escrow: escrow_key,
             settlement_id,
-            community_id: escrow.community_id.clone(),
-            usdc_amount: escrow.usdc_amount,
-            idr_amount: escrow.idr_amount,
+            community_id: community_id_log,
+            usdc_amount: usdc_log,
+            idr_amount: idr_log,
             timestamp: Clock::get()?.unix_timestamp,
         });
 
@@ -168,6 +177,7 @@ pub mod arpay {
     /// Permissionless refund path. Anyone can call this after the timeout
     /// window has passed and the escrow is still in `Pending` state.
     pub fn refund_escrow(ctx: Context<RefundEscrow>) -> Result<()> {
+        let escrow_key = ctx.accounts.escrow.key();
         let escrow = &mut ctx.accounts.escrow;
         let clock = Clock::get()?;
 
@@ -201,19 +211,22 @@ pub mod arpay {
         );
         token::transfer(cpi_ctx, escrow.usdc_amount)?;
 
+        let sponsor_log = escrow.sponsor;
+        let usdc_log = escrow.usdc_amount;
+
         escrow.status = EscrowStatus::Refunded;
 
         emit!(EscrowRefunded {
-            escrow: ctx.accounts.escrow.key(),
-            sponsor: escrow.sponsor,
-            usdc_amount: escrow.usdc_amount,
+            escrow: escrow_key,
+            sponsor: sponsor_log,
+            usdc_amount: usdc_log,
             timestamp: clock.unix_timestamp,
         });
 
         msg!(
             "ArPay: escrow refunded | sponsor={} usdc={}",
-            escrow.sponsor,
-            escrow.usdc_amount,
+            sponsor_log,
+            usdc_log,
         );
 
         Ok(())

@@ -19,7 +19,7 @@ const STEPS = [
   {
     key: "t1",
     label: "T₁ — Wallet Signed",
-    sub: "Eco-sponsor sign tx · Submit ke Solana RPC",
+    sub: "Eco-sponsor signs tx · Submit to Solana RPC",
     layer: "L1",
   },
   {
@@ -43,7 +43,7 @@ const STEPS = [
   {
     key: "t5",
     label: "T₅ — BI-FAST Credit",
-    sub: "Community hub bank account credited · IDR diterima",
+    sub: "Community hub bank account credited · IDR received",
     layer: "L3",
   },
 ] as const;

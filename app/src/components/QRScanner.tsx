@@ -46,7 +46,7 @@ export function QRScanner({ onScan, active }: QRScannerProps) {
       }
     } catch (err) {
       setCameraError(
-        "Kamera tidak tersedia. Masukkan NMID secara manual di bawah."
+        "Camera unavailable. Please enter the NMID manually below."
       );
     }
   }, []);
@@ -118,9 +118,9 @@ export function QRScanner({ onScan, active }: QRScannerProps) {
   // ── Demo QR codes ───────────────────────────────────────────────────────
 
   const DEMO_HUBS = [
-    { name: "Koperasi Daur Ulang Malang", nmid: "NMID202400001234" },
-    { name: "Pusat Kompos Surabaya",       nmid: "NMID202400002891" },
-    { name: "DePIN AQI Node Bandung",      nmid: "NMID202400003774" },
+    { name: "Malang Recycling Cooperative", nmid: "NMID202400001234" },
+    { name: "Surabaya Composting Hub",      nmid: "NMID202400002891" },
+    { name: "DePIN AQI Node Bandung",       nmid: "NMID202400003774" },
   ];
 
   return (
@@ -135,7 +135,7 @@ export function QRScanner({ onScan, active }: QRScannerProps) {
         {!scanning && !cameraError && (
           <div className={styles.placeholder}>
             <span className={styles.qrIcon}>⬚</span>
-            <span>Memuat kamera...</span>
+            <span>Loading camera...</span>
           </div>
         )}
         {cameraError && (
@@ -172,7 +172,7 @@ export function QRScanner({ onScan, active }: QRScannerProps) {
 
       {/* Manual NMID entry */}
       <div className={styles.section}>
-        <p className={styles.sectionLabel}>Atau masukkan NMID manual</p>
+        <p className={styles.sectionLabel}>Or enter NMID manually</p>
         <div className={styles.manualRow}>
           <input
             className={styles.manualInput}
@@ -183,7 +183,7 @@ export function QRScanner({ onScan, active }: QRScannerProps) {
             onKeyDown={(e) => e.key === "Enter" && handleManualSubmit()}
           />
           <button className={styles.manualBtn} onClick={handleManualSubmit}>
-            Cari
+            Search
           </button>
         </div>
       </div>

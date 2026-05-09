@@ -59,7 +59,7 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
         </h2>
         <div className={styles.grid2}>
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Nama</span>
+            <span className={styles.fieldLabel}>Name</span>
             <span className={styles.fieldVal}>{hub.merchantName}</span>
           </div>
           <div className={styles.field}>
@@ -69,13 +69,13 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
         </div>
         <div className={styles.grid2}>
           <div className={styles.field}>
-            <span className={styles.fieldLabel}>Jaringan</span>
+            <span className={styles.fieldLabel}>Network</span>
             <span className={styles.fieldVal}>QRIS · BI-FAST</span>
           </div>
           <div className={styles.field}>
             <span className={styles.fieldLabel}>Status</span>
             <span className={`${styles.fieldVal} ${styles.verified}`}>
-              ✓ Terverifikasi BI
+              ✓ BI Verified
             </span>
           </div>
         </div>
@@ -85,11 +85,11 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
       <section className={styles.card}>
         <h2 className={styles.cardTitle}>
           <span className={styles.dot} />
-          Nilai Grant
+          Grant Amount
         </h2>
 
         <div className={styles.inputGroup}>
-          <label className={styles.inputLabel}>Jumlah USDC</label>
+          <label className={styles.inputLabel}>USDC Amount</label>
           <div className={styles.inputRow}>
             <input
               className={styles.input}
@@ -137,7 +137,7 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
               </span>
             ) : (
               <span className={styles.pill + " " + styles.pillAmber}>
-                Slippage tinggi
+                High Slippage
               </span>
             )}
           </span>
@@ -148,14 +148,14 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
       <section className={styles.card}>
         <h2 className={styles.cardTitle}>
           <span className={styles.dot} />
-          Ringkasan Settlement
+          Settlement Summary
         </h2>
         <div className={styles.summaryRows}>
           {[
             { label: "Grant amount", val: `${store.usdcAmount.toFixed(6)} USDC` },
             { label: "Protocol fee", val: "0.00 USDC (0%)" },
             { label: "Solana tx fee", val: "≈ 0.000005 SOL" },
-            { label: "Escrow timeout", val: "120 detik" },
+            { label: "Escrow timeout", val: "120 seconds" },
             { label: "Settlement layer", val: "Solana → Xendit → BI-FAST" },
           ].map(({ label, val }) => (
             <div key={label} className={styles.summaryRow}>
@@ -164,7 +164,7 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
             </div>
           ))}
           <div className={styles.summaryRow + " " + styles.summaryRowLast}>
-            <span className={styles.summaryLabel}>Community hub menerima</span>
+            <span className={styles.summaryLabel}>Community hub receives</span>
             <span className={`${styles.summaryVal} ${styles.summaryGreen}`}>
               Rp {store.idrAmount.toLocaleString("id-ID")}
             </span>
@@ -182,7 +182,7 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
           {isSubmitting ? (
             <>
               <span className={styles.spinner} />
-              Menunggu tanda tangan wallet...
+              Waiting for wallet signature...
             </>
           ) : (
             <>
@@ -195,13 +195,13 @@ export function GrantReview({ onSubmit, onBack, isSubmitting }: GrantReviewProps
         <div className={styles.walletBtnWrapper}>
           <WalletMultiButton />
           <p className={styles.walletHint}>
-            Hubungkan wallet Solana (Phantom / Solflare) untuk melanjutkan
+            Connect your Solana wallet (Phantom / Solflare) to continue
           </p>
         </div>
       )}
 
       <button className={styles.backBtn} onClick={onBack} disabled={isSubmitting}>
-        ← Kembali ke scanner
+        ← Back to scanner
       </button>
     </div>
   );
