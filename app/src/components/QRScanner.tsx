@@ -159,7 +159,14 @@ export function QRScanner({ onScan, active }: QRScannerProps) {
               key={hub.nmid}
               className={styles.hubBtn}
               onClick={() => {
-                const mockQRIS = `000201260006${hub.nmid}5204000053033605802ID59${String(hub.name.length).padStart(2,"0")}${hub.name}6013Malang6304ABCD`;
+                const mockQRIS =
+                  `000201` +
+                  `26${String(hub.nmid.length + 6).padStart(2, "0")}` +
+                  `0002ID` +
+                  `01${String(hub.nmid.length).padStart(2, "0")}${hub.nmid}` +
+                  `5204000053033605802ID` +
+                  `59${String(hub.name.length).padStart(2, "0")}${hub.name}` +
+                  `6013Malang6304ABCD`;
                 onScan(mockQRIS);
               }}
             >
