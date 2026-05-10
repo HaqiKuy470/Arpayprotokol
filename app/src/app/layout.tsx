@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description:
     "Distribute USDC green incentive grants to Indonesian community hubs via QRIS and BI-FAST in under 5 seconds.",
   manifest: "/manifest.json",
-  icons: { apple: "/icon-192.png" },
+  icons: { icon: "/favicon.svg", apple: "/favicon.svg" },
 };
 
 export const viewport: Viewport = {

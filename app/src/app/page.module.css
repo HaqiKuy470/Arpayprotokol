@@ -32,17 +32,8 @@
   letter-spacing: -0.5px;
 }
 
-.navDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-accent-2);
-  animation: pulse 2.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(0.85); }
+.logoImg {
+  filter: drop-shadow(0 0 8px rgba(22, 214, 127, 0.3));
 }
 
 .navTag {

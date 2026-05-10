@@ -18,7 +18,10 @@ import { SettlementTimeline } from "../components/SettlementTimeline";
 import { SettlementReceipt } from "../components/SettlementReceipt";
 import { useSettlement } from "../hooks/useSettlement";
 import { useArPayStore } from "../lib/store";
+import Image from "next/image";
+import logo from "../public/arpaylogo.svg";
 import styles from "./page.module.css";
+
 
 type Step = 0 | 1 | 2 | 3;
 
@@ -71,7 +74,7 @@ export default function Home() {
       {/* Top nav */}
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
-          <span className={styles.navDot} />
+          <Image src={logo} alt="ArPay" width={28} height={28} className={styles.logoImg} />
           ArPay
           <span className={styles.navTag}>Devnet</span>
         </div>
@@ -84,13 +87,12 @@ export default function Home() {
           {STEP_LABELS.map((label, i) => (
             <div
               key={label}
-              className={`${styles.stepItem} ${
-                i === step
+              className={`${styles.stepItem} ${i === step
                   ? styles.stepActive
                   : i < step
-                  ? styles.stepDone
-                  : styles.stepWaiting
-              }`}
+                    ? styles.stepDone
+                    : styles.stepWaiting
+                }`}
             >
               <span className={styles.stepNum}>
                 {i < step ? "✓" : i + 1}
