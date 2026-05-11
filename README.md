@@ -5,6 +5,16 @@
 
 ---
 
+## About The Project
+
+ArPay is an innovative eco-incentive settlement protocol designed to bridge the gap between global Web3 capital and local environmental initiatives in Indonesia. It enables eco-sponsors to instantly distribute green incentive grants (in USDC on the Solana blockchain) directly to grassroots community hubs—such as recycling cooperatives, composting centers, and DePIN node operators.
+
+**The Problem:** Traditional cross-border funding for local green projects is slow, incurs high fees, and requires local hubs to navigate complex crypto exchanges, wallets, or regulatory hurdles.
+
+**The Solution:** ArPay leverages the speed of Solana, Pyth oracle price feeds, and a Python-based Oracle Bridge connected to Xendit's disbursement API. This allows sponsors to send USDC while the receiving community hub gets Indonesian Rupiah (IDR) directly into their standard bank account via BI-FAST and QRIS in under 5 seconds. The local hub needs *zero* crypto knowledge and holds *no* crypto assets, ensuring full regulatory compliance while benefiting from Web3 efficiency.
+
+---
+
 ## Architecture
 
 ```
@@ -233,8 +243,8 @@ SOLANA_WSS_URL=wss://mainnet.helius-rpc.com/?api-key=YOUR_KEY
 - [Pyth Network Price Feeds](https://pyth.network/developers/price-feed-ids)
 - [Xendit Disbursements API](https://developers.xendit.co/api-reference/#disbursements)
 - [Bank Indonesia QRIS Standard](https://www.bi.go.id/id/sistem-pembayaran/standar-nasional/qris.aspx)
-- [ArPay Whitepaper](./ArPay_Protocol.pdf)
-
+- [About Arpay](https://hello.arpay.my.id/)
+- [ArPay Whitepaper](https://hello.arpay.my.id/docs/ArPay_Protocol.pdf)
 ---
 
-*Arshaka Team · arshaka@zohomail.com · Malang, Indonesia*
+*Built by Moh Dhiyaulhaq Ulumuddin · arshaka@zohomail.com · Malang, Indonesia*
